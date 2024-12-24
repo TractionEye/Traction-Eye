@@ -89,7 +89,6 @@ export const ConnectPage = () => {
 		const walletAddress = localStorage.getItem(
 			LocalStorageKeys.user_service_wallet_address
 		);
-    console.log("TON UI STATE", isDisconnected, tonConnectUI.wallet)
 		if (!walletAddress && !isDisconnected && !isFirstLogin) {
 			tonConnectUI?.disconnect();
 			setIsDisconnected(true);
@@ -98,12 +97,12 @@ export const ConnectPage = () => {
 		}
 	}, [isDisconnected]);
   
-
 	useEffect(() => {
 		if (!userFriendlyAddress || !initDataRaw || !isDisconnected) {
 			const timeoutId = setTimeout(() => {
 				localStorage.removeItem(LocalStorageKeys.user_service_wallet_address);
 				setWalletAddress(null); // Update the state after removal
+				tonConnectUI?.disconnect();
 			}, 5000);
 
 			return () => clearTimeout(timeoutId); // Cleanup
@@ -139,7 +138,7 @@ export const ConnectPage = () => {
 
 				navigate({ pathname: "/", search: "", hash: '' });
 			} catch (err) {
-				console.log("--err", err);
+				tonConnectUI?.disconnect();
 			}
 		})();
 	}, [

@@ -64,6 +64,7 @@ export const UserServiceApi = {
 				console.error("Unexpected error:", error);
 				toast.error("An unexpected error occurred");
 			}
+			localStorage.removeItem(LocalStorageKeys.user_service_wallet_address);
 			throw error;
 		}
 	},
