@@ -184,7 +184,7 @@ export const DepositContent: FC<DepositContentProps> = ({
                 </Typography>
             </Box>
             <button 
-                className="w-full h-[40px] bg-[#FFD700] text-black rounded-xl font-medium text-[17px] mb-[20px] disabled:opacity-50"
+                className="w-full h-[40px] bg-[#FFD235] text-black rounded-xl font-medium text-[17px] mb-[20px] disabled:opacity-50"
                 onClick={onInvest}
                 disabled={!canDoSwap || !sendTokenAmount || Number(sendTokenAmount) < 100}
             >

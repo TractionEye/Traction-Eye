@@ -133,7 +133,7 @@ export const TraderSettings: FC = () => {
                     <textarea 
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
-                        className="w-full h-[134px] mt-2 bg-[#000000]/20 border border-[#FFD700]/30 rounded-2xl p-3 text-white text-[11px] placeholder:text-gray-400 focus:outline-none"
+                        className="w-full h-[134px] mt-2 bg-[#000000]/20 border border-[#FFD235]/30 rounded-2xl p-3 text-white text-[11px] placeholder:text-gray-400 focus:outline-none"
                         placeholder="specify the recommended deposit for your strategy, maximum leverage used, maximum possible losses per day, minimum trade duration, maximum trade duration and trading pairs."
                         maxLength={300}
                     />
@@ -150,7 +150,7 @@ export const TraderSettings: FC = () => {
                         value={collateral}
                         onChange={(e) => setCollateral(e.target.value)}
                         fullWidth
-                        IconComponent={() => <IoIosArrowDown className="text-[#FFD700] mr-2" size={20} />}
+                        IconComponent={() => <IoIosArrowDown className="text-[#FFD235] mr-2" size={20} />}
                         sx={selectStyles}
                         MenuProps={menuProps}
                     >
@@ -173,14 +173,14 @@ export const TraderSettings: FC = () => {
                         value={protocol}
                         onChange={(e) => setProtocol(e.target.value)}
                         fullWidth
-                        IconComponent={() => <IoIosArrowDown className="text-[#FFD700] mr-2" size={20} />}
+                        IconComponent={() => <IoIosArrowDown className="text-[#FFD235] mr-2" size={20} />}
                         sx={selectStyles}
                         MenuProps={menuProps}
                     >
                         <MenuItem value="STORM">
                             <div className="flex items-center gap-2">
                                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                    <path d="M10 2L3 6V14L10 18L17 14V6L10 2Z" stroke="#FFD700" strokeWidth="1.5"/>
+                                    <path d="M10 2L3 6V14L10 18L17 14V6L10 2Z" stroke="#FFD235" strokeWidth="1.5"/>
                                 </svg>
                                 <span>Storm Trade DEX</span>
                             </div>
@@ -192,7 +192,7 @@ export const TraderSettings: FC = () => {
 
                 <div className="mb-[143px]">
                     <button 
-                        className="w-full h-[40px] bg-[#FFD700] text-black rounded-[10px] font-medium text-[17px]"
+                        className="w-full h-[40px] bg-[#FFD235] text-black rounded-[10px] font-medium text-[17px]"
                         onClick={handleOpenDepositModal}
                     >
                         Deposit
