@@ -19,4 +19,5 @@ jobs:
             cd /home/default_user/frontend/Traction-Eye
             git pull
             npm install --force
+            export NODE_OPTIONS="--max-old-space-size=2048"
             npm run build --host
