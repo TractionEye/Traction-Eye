@@ -44,7 +44,7 @@ export const StormPoolCard: FC<LiquidityPoolCardProps> = ({
 									) : (
 										<MoveDownRight className="text-red-400 h-5 w-5" strokeWidth={4} />
 									)}
-									<span>{pool.direction} </span>
+									<span className="flex gap-x-2 items-center">{pool.direction} <span className="text-sm">x{pool.leverage.toFixed(2)}</span></span>
 								</p>
 								<p className="text-xl font-bold mt-2">
 									${formatNumber(pool.total_balance_usd, false)}
@@ -61,13 +61,13 @@ export const StormPoolCard: FC<LiquidityPoolCardProps> = ({
 									</div>
 									<p
 										className={`${
-											Number(pool.pnl) >= 0 || !pool.pnl
+											Number(pool.pnl_percentage) >= 0 || !pool.pnl_percentage
 												? "text-green-600"
 												: "text-red-600"
 										} py-2 px-1 text-right text-xs font-medium flex justify-end whitespace-nowrap tracking-wider`}
 									>
-										{Number(pool.pnl) > 0 ? "+" : ""}
-										{formatNumber(pool.pnl, false)}% ($
+										{Number(pool.pnl_percentage) > 0 ? "+" : ""}
+										{formatNumber(pool.pnl_percentage, false)}% ($
 										{formatNumber(pool.pnl, false)})
 									</p>
 								</div>

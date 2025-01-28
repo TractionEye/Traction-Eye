@@ -1,5 +1,3 @@
-
-
 import { Colors } from '@/constants';
 import React from 'react';
 

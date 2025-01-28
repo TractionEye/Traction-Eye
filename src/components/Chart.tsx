@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { LineChart, Line, ResponsiveContainer, Tooltip, ReferenceLine, XAxis, YAxis} from "recharts";
 import { ChartData } from "@/types";
+import { GoogleAnalytics } from "@/services";
 
 interface ChartMouseEvent {
     activeTooltipIndex?: number;
@@ -35,6 +36,8 @@ export default function Chart({ worth_chart, onMouseMove, onMouseDown, onMouseUp
     const [highlightedIndex, setHighlightedIndex] = useState<number | undefined>(undefined);
     const [activeX, setActiveX] = useState<number | null>(null);
     const [activeY, setActiveY] = useState<number | null>(null);
+
+    const mouseDownTimeRef = useRef<number | null>(null);
 
     const transformed_chart = worth_chart.map((item, index) => ({
         timestamp: item.timestamp,
@@ -89,11 +92,21 @@ export default function Chart({ worth_chart, onMouseMove, onMouseDown, onMouseUp
     };
 
     const handleMouseDown = () => {
+        mouseDownTimeRef.current = Date.now();
         setIsMouseDown(true);
         onMouseDown && onMouseDown();
     };
 
     const handleMouseUp = () => {
+        const mouseUpTime = Date.now();
+        const elapsedTime = mouseDownTimeRef.current
+            ? mouseUpTime - mouseDownTimeRef.current
+            : 0;
+
+        // Reset mouseDownTimeRef
+        mouseDownTimeRef.current = null;
+        GoogleAnalytics.chartUsage(elapsedTime);
+        
         setIsMouseDown(false);
         onMouseUp && onMouseUp();
     };

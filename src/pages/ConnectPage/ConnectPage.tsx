@@ -3,7 +3,7 @@ import { useTonAddress } from "@tonconnect/ui-react";
 import Logo from "../IndexPage/TELogo.svg";
 import { useTonConnectUI } from "@tonconnect/ui-react";
 import { postEvent, retrieveLaunchParams } from "@telegram-apps/sdk";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { API } from "@/api/api";
 import { UserServiceApi } from "@/api/userServiceApi";
@@ -14,7 +14,8 @@ import { IoMdWallet } from "@/components/icons";
 import "./ConnectPage.css"; // Импортируйте CSS файл
 import { Spinner } from "@/components/ui/spinner";
 import { LocalStorageKeys } from "@/constants/localStorage";
-//fuck shit
+import { useAuthStore } from "@/store/store";
+import { GoogleAnalytics } from "@/services";
 
 export const ConnectPage = () => {
 	const [currentSlide, setCurrentSlide] = useState(0);
@@ -29,6 +30,7 @@ export const ConnectPage = () => {
 	);
 
 	const { initDataRaw } = retrieveLaunchParams();
+	const userId = initData?.user?.id;
 	const location = useLocation();
 
 	useEffect(() => {
@@ -44,9 +46,17 @@ export const ConnectPage = () => {
 		}
 	}, [location.search]);
 
-	// useEffect(() => {
-	//   navigate('/');
-	// }, [])
+	useEffect(() => {
+		const refCode = initData?.startParam?.split("__wallet=")[0];
+		if(userId && refCode && refCode?.includes("ref_")) {
+			const refCodeFromStorage = localStorage.getItem(`${LocalStorageKeys.referral_user_Id}${userId}`);
+			if(!refCodeFromStorage) {
+				GoogleAnalytics.openedMiniAppWithRefCode();
+			}
+			localStorage.setItem(`${LocalStorageKeys.referral_user_Id}${userId}`, refCode);
+		}
+
+	}, [userId, initData?.startParam])
 
 	const loginMutation = useMutation({
 		mutationKey: ["login"],
@@ -73,12 +83,12 @@ export const ConnectPage = () => {
 
 	const [tonConnectUI] = useTonConnectUI();
 	const [isDisconnected, setIsDisconnected] = useState(false);
+	const { setIsAuthenticated } = useAuthStore();
 
 	useEffect(() => {
 		const walletAddress = localStorage.getItem(
 			LocalStorageKeys.user_service_wallet_address
 		);
-    console.log("TON UI STATE", isDisconnected)
 		if (!walletAddress && !isDisconnected && !isFirstLogin) {
 			tonConnectUI?.disconnect();
 			setIsDisconnected(true);
@@ -86,12 +96,13 @@ export const ConnectPage = () => {
 			setIsDisconnected(true);
 		}
 	}, [isDisconnected]);
-
+  
 	useEffect(() => {
 		if (!userFriendlyAddress || !initDataRaw || !isDisconnected) {
 			const timeoutId = setTimeout(() => {
 				localStorage.removeItem(LocalStorageKeys.user_service_wallet_address);
 				setWalletAddress(null); // Update the state after removal
+				tonConnectUI?.disconnect();
 			}, 5000);
 
 			return () => clearTimeout(timeoutId); // Cleanup
@@ -101,11 +112,12 @@ export const ConnectPage = () => {
 			try {
 				const { token } = await loginMutation.mutateAsync(initDataRaw);
 				if (token && userFriendlyAddress === walletAddress && isFirstLogin) {
+					setIsAuthenticated(true)
 					navigate("/");
 					return;
 				}
 				localStorage.setItem(LocalStorageKeys.userServiceToken, token);
-				const refCode = initData?.startParam;
+				const refCode = localStorage.getItem(`${LocalStorageKeys.referral_user_Id}${userId}`) || initData?.startParam?.split("__wallet=")[0];
 				await Promise.all([
 					userServiceAddWalletMutation.mutateAsync({
 						walletAddress: userFriendlyAddress,
@@ -122,10 +134,11 @@ export const ConnectPage = () => {
 					userFriendlyAddress
 				);
 				localStorage.setItem(LocalStorageKeys.firstLogin, "true");
+				setIsAuthenticated(true);
 
 				navigate({ pathname: "/", search: "", hash: '' });
 			} catch (err) {
-				console.log("--err", err);
+				tonConnectUI?.disconnect();
 			}
 		})();
 	}, [
@@ -136,6 +149,7 @@ export const ConnectPage = () => {
 		isDisconnected,
 		initData,
 		isFirstLogin,
+		userId,
 	]);
 
 	const connectHandleClick = () => {
@@ -143,6 +157,7 @@ export const ConnectPage = () => {
 			type: "notification",
 			notification_type: "warning",
 		});
+		GoogleAnalytics.openConnectWallet();
 		tonConnectUI.openModal();
 	};
 
@@ -154,6 +169,7 @@ export const ConnectPage = () => {
 
 		if (currentSlide < 1) {
 			setCurrentSlide(currentSlide + 1);
+			GoogleAnalytics.swipeOrContinueButton();
 		} else {
 			connectHandleClick();
 		}
@@ -181,18 +197,6 @@ export const ConnectPage = () => {
 			{...handlers}
 			className="connect-page h-screen flex flex-col p-4 pt-2 select-none overflow-hidden"
 		>
-			<Link
-				className="flex text-sm items-center text-yellow-300 shadow-md shadow-yellow-500/40 mr-1 px-3 bg-black border rounded-xl h-9"
-				to={"/friend"}
-			>
-				Friend PAGE
-			</Link>
-			<Link
-				className="flex text-sm items-center text-yellow-300 shadow-md shadow-yellow-500/40 mr-1 px-3 bg-black border rounded-xl h-9"
-				to={{pathname: "/", search: '', hash: ''}}
-			>
-				INDEX
-			</Link>
 			<div className="flex-grow flex flex-col justify-center items-center max-w-md w-full mx-auto">
 				<div className="text-center rounded-xl z-1 p-4 py-0 text-gray-300 flex flex-col items-center">
 					{currentSlide === 0 ? (
