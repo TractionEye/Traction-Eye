@@ -1,7 +1,7 @@
 import { SDKProvider, useLaunchParams } from '@telegram-apps/sdk-react';
 import { TonConnectUIProvider } from '@tonconnect/ui-react';
 import { OmnistonProvider } from "@ston-fi/omniston-sdk-react";
-import { type FC, useEffect, useMemo } from 'react';
+import { type FC, useMemo } from 'react';
 
 import { App } from '@/components/App.tsx';
 import { ErrorBoundary } from '@/components/ErrorBoundary.tsx';
