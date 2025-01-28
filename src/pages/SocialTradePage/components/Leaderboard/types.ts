@@ -1,7 +1,7 @@
- 
-    value: number;
-  }
-  
+interface ChartDataPoint {
+  value: number;
+}
+
 export interface TraderData {
     id: number;
     username: string;
