@@ -35,12 +35,5 @@ export const stormTonEndpoints = {
   vaults: "/vaults"
 }
 
-export const trustApiEndpoints = {
-  createPayment: '/payment/create',
-  getPaymentStatus: '/payment/status',
-  createStrategy: '/strategy/create',
-  getStrategy: '/strategy/get',
-  getStrategyList: '/strategy/list'
-};
 
 export default endpoints;

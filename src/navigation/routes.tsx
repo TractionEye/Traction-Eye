@@ -10,8 +10,6 @@ import AssetItemPage from "@/pages/AssetItemPage/AssetItemPage";
 import PremiumBuyPage from "@/pages/PremiumBuyPage/PremiumBuyPage";
 import { SocialScorePage } from "@/pages/SocialScorePage";
 import FriendPage from "@/components/FriendPage";
-import { SocialTradePage } from "@/pages/SocialTradePage";
-import { TraderSettings } from '../pages/SocialTradePage/components/TraderSettings';
 
 interface Route {
     path: string;
@@ -25,12 +23,10 @@ export const routes: Route[] = [
     { path: "/referral", Component: SocialScorePage },
     { path: "/connect", Component: ConnectPage },
     { path: "/swap", Component: SwapPage },
-    { path: "/social-trade", Component: SocialTradePage },
     { path: "/profiles", Component: ProfilesListPage },
     { path: "/friend", Component: FriendPage },
     { path: "/nfts", Component: NFTListPage },
     { path: "/nft/:id", Component: NFTItemPage },
     { path: "/asset/:id", Component: AssetItemPage },
     { path: "/premium", Component: PremiumBuyPage },
-    { path: '/social-trade/create-strategy', Component: TraderSettings },
 ];

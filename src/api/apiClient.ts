@@ -85,26 +85,5 @@ export const stormTonClient = axios.create({
   },
 });
 
-export const testTrustApiClient = axios.create({
-  baseURL: 'https://test.tractioneye.ru/trust_api/',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
-
-testTrustApiClient.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => {
-    console.error('Request error:', error);
-    return Promise.reject(error);
-  }
-);
-
 
 export default apiClient;

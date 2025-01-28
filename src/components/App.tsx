@@ -17,11 +17,9 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { TonConnectUIProvider, useTonAddress } from "@tonconnect/ui-react";
 import { Toaster } from "react-hot-toast";
 import { routes } from "@/navigation/routes.tsx";
-import { SocialCap, AssetsOff, IoMdWallet, SocialTrade } from "./icons";
+import { SocialCap, AssetsOff, IoMdWallet } from "./icons";
 import { useAuthStore } from "@/store/store";
 import { GoogleAnalytics } from "@/services";
-import bottomImage from '@/assets/images/bottom.png';
-import { DepositSuccessModal } from "@/pages/SocialTradePage/components/DepositSuccessModal";
 const queryClient = new QueryClient();
 
 export const App: FC = () => {
@@ -129,17 +127,14 @@ export const App: FC = () => {
         if (newValue === 0) {
             navigator.push("/");
         } else if (newValue === 1) {
-            navigator.push("/social-trade");
-        } else if (newValue === 2) {
             GoogleAnalytics.socialCapClick();
             navigator.push("/referral");
         }
     };
 
     useEffect(() => {
+        console.log("curlock", location);
         if (location?.pathname === "/referral") {
-            setValue(2);
-        } else if (location?.pathname === "/social-trade") {
             setValue(1);
         } else {
             setValue(0);
@@ -147,6 +142,14 @@ export const App: FC = () => {
     }, [location?.pathname]);
 
     const [showConnectBtn, setShowConnectBtn] = useState(false);
+
+    // useEffect(() => {
+    // 	if (!userFriendlyAddress.length && !tonConnectUI?.wallet) {
+    // 		setShowConnectBtn(true);
+    // 		return;
+    // 	}
+    // 	setShowConnectBtn(false);
+    // }, [location?.pathname]);
 
     useEffect(() => {
         if (isAuthenticated) {
@@ -162,6 +165,7 @@ export const App: FC = () => {
                 <QueryClientProvider client={queryClient}>
                     <Toaster position="top-right" reverseOrder={false} />
                     <Router location={location} navigator={reactNavigator}>
+                        {/* <div>{`isAuthenticated ${isAuthenticated}, isFromRefLink ${isFromRefLink}`}</div> */}
                         <Routes>
                             {routes.map((route) => (
                                 <Route key={route.path} {...route} />
@@ -169,52 +173,19 @@ export const App: FC = () => {
                             <Route path="*" element={<Navigate to="/" />} />
                         </Routes>
                         {location?.pathname !== "/connect" && (
-                            <>
-                                <img 
-                                    src={bottomImage} 
-                                    alt="bottom" 
-                                    className="fixed bottom-[89px] left-1/2 -translate-x-1/2 w-[53px] h-auto z-40"
-                                    style={{ aspectRatio: 'auto' }}
-                                />
-                                <BottomNavigation
-                                    value={value}
-                                    onChange={handleNavigationChange}
-                                    showLabels
-                                    className="fixed bottom-0 w-full z-50 pb-safe"
-                                    sx={{
-                                        height: location?.pathname === "/friend" || showConnectBtn ? 0 : 90,
-                                        background: 'linear-gradient(90deg, #494433 0%, #33332E 50%, #2E2E2E 100%)',
-                                        padding: 0,
-                                        margin: 0,
-                                        border: 'none',
-                                        '& .MuiBottomNavigationAction-root': {
-                                            padding: 0,
-                                            minWidth: 'auto'
-                                        }
-                                    }}
-                                >
-                                    <BottomNavigationAction icon={<AssetsOff isActive={value === 0} />} />
-                                    <BottomNavigationAction 
-                                        icon={<SocialTrade isActive={value === 1} />}
-                                        onClick={() => {
-                                            console.log("social trade");
-                                            navigator.push("/social-trade");
-                                        }}
-                                        sx={{
-                                            position: 'relative',
-                                            top: '-12px',
-                                            '& .MuiSvgIcon-root': {
-                                                fontSize: '2rem',
-                                                transform: 'scale(1.5)',
-                                                marginBottom: '1rem'
-                                            }
-                                        }}
-                                    />
-                                    <BottomNavigationAction icon={<SocialCap isActive={value === 2} />} />
-                                </BottomNavigation>
-                            </>
+                            <BottomNavigation
+                                value={value}
+                                onChange={handleNavigationChange}
+                                showLabels
+                                className="fixed bottom-0 w-full z-50 pb-safe"
+                                style={{
+                                    height: location?.pathname === "/friend" || showConnectBtn ? 0 : 90,
+                                }}
+                            >
+                                <BottomNavigationAction icon={<AssetsOff isActive={value === 0} />} />
+                                <BottomNavigationAction icon={<SocialCap isActive={value === 1} />} />
+                            </BottomNavigation>
                         )}
-                        <DepositSuccessModal />
                         {showConnectBtn && !isAuthenticated && location?.pathname !== "/connect" ? (
                             <Link to="/connect?from=link">
                                 <div className="absolute bottom-10 left-0 flex justify-center w-full">
