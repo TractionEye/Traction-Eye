@@ -43,8 +43,24 @@ export const DepositContent: FC<DepositContentProps> = ({
     }, []);
 
     const handleClose = () => {
+        if (document.activeElement instanceof HTMLElement) {
+            document.activeElement.blur();
+        }
         setSendTokenAmount("0");
-        onClose();
+
+        // Проверяем, была ли открыта клавиатура
+        const isKeyboardOpen = window.innerHeight < window.outerHeight;
+        
+        if (isKeyboardOpen) {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            onClose();
+        } else {
+            // Если клавиатура уже закрыта, добавляем задержку
+            setTimeout(() => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                onClose();
+            }, 50);
+        }
     };
 
     return (
@@ -131,6 +147,7 @@ export const DepositContent: FC<DepositContentProps> = ({
                         value={sendTokenAmount}
                         placeholder="0.00"
                         onChange={(e) => setSendTokenAmount(e.target.value)}
+                        onBlur={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                         type="number"
                         variant="outlined"
                         size="small"
@@ -184,7 +201,7 @@ export const DepositContent: FC<DepositContentProps> = ({
                 </Typography>
             </Box>
             <button 
-                className="w-full h-[40px] bg-[#FFD700] text-black rounded-xl font-medium text-[17px] mb-[20px] disabled:opacity-50"
+                className="w-full h-[40px] bg-[#FFD235] text-black rounded-xl font-medium text-[17px] mb-[20px] disabled:opacity-50"
                 onClick={onInvest}
                 disabled={!canDoSwap || !sendTokenAmount || Number(sendTokenAmount) < 100}
             >

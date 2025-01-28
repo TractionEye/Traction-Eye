@@ -32,15 +32,15 @@ export const MyStrategy: FC = () => {
                     <span className="mr-2">•</span>
                     <p>Create a strategy and earn from fees for profitably managing others&apos; capital.</p>
                 </div>
-                <div className="bg-[#FFD700]/10 border border-[#FFD700] rounded-lg py-2 px-[10px] flex items-center w-[266px]">
-                    <WarningIcon size={20} />
-                    <p className="text-[#FFD700] text-[10px] ml-[5px]">
+                <div className="bg-[#FFD235]/10 border border-[#FFD235] rounded-lg py-1 px-[10px] h-[38px] flex items-center w-[266px]">
+                    <WarningIcon size={34} />
+                    <p className="text-[#FFD235] text-[10px] ml-[5px]">
                         Once a strategy is created, a trader will not be able to follow other strategies
                     </p>
                 </div>
             </div>
             <button 
-                className="w-full bg-[#FFD700] text-black py-2 rounded-lg font-medium h-[40px]"
+                className="w-full bg-[#FFD235] text-black py-2 rounded-lg font-medium h-[40px]"
                 onClick={handleCreateStrategy}
             >
                 Create strategy
