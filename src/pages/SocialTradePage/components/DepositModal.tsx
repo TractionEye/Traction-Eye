@@ -70,17 +70,30 @@ export const DepositModal: FC<DepositModalProps> = ({
         });
     };
 
+    const handleClose = () => {
+        if (document.activeElement instanceof HTMLElement) {
+            document.activeElement.blur();
+        }
+        setSendTokenAmount("0");
+        setTimeout(() => {
+            onClose();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }, 30);
+    };
+
     return (
         <Drawer
             anchor="bottom"
             open={isOpen}
-            onClose={onClose}
+            onClose={handleClose}
+            disableScrollLock
             PaperProps={{
                 sx: {
                     backgroundColor: '#1C1C1E',
                     borderTopLeftRadius: '30px',
                     borderTopRightRadius: '30px',
                     borderTop: '1px solid #FFD235',
+                    WebkitTransform: 'translate3d(0,0,0)'
                 }
             }}
         >

@@ -43,8 +43,24 @@ export const DepositContent: FC<DepositContentProps> = ({
     }, []);
 
     const handleClose = () => {
+        if (document.activeElement instanceof HTMLElement) {
+            document.activeElement.blur();
+        }
         setSendTokenAmount("0");
-        onClose();
+
+        // Проверяем, была ли открыта клавиатура
+        const isKeyboardOpen = window.innerHeight < window.outerHeight;
+        
+        if (isKeyboardOpen) {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            onClose();
+        } else {
+            // Если клавиатура уже закрыта, добавляем задержку
+            setTimeout(() => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                onClose();
+            }, 50);
+        }
     };
 
     return (
@@ -131,6 +147,7 @@ export const DepositContent: FC<DepositContentProps> = ({
                         value={sendTokenAmount}
                         placeholder="0.00"
                         onChange={(e) => setSendTokenAmount(e.target.value)}
+                        onBlur={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                         type="number"
                         variant="outlined"
                         size="small"
