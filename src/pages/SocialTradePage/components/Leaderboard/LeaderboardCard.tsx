@@ -10,9 +10,16 @@ import StormTrade from "./icons/StormTrade.png"
 interface Props {
   trader: TraderData;
   handleMyStrategyClick: () => void;
+  index: number;
 }
 
-export const LeaderboardCard: FC<Props> = ({ trader, handleMyStrategyClick }) => {
+const TROPHY_COLORS = {
+  GOLD: '#FFD235',
+  SILVER: '#CFD1D3',
+  BRONZE: '#FF9534'
+} as const;
+
+export const LeaderboardCard: FC<Props> = ({ trader, handleMyStrategyClick, index }) => {
   const isPositive = trader.roi > 0;
   const roiColor = isPositive ? 'text-[#16A34A]' : 'text-red-500';
   const profitFormatted = (isPositive ? '+' : '-') + new Intl.NumberFormat('en-US', {
@@ -34,8 +41,30 @@ export const LeaderboardCard: FC<Props> = ({ trader, handleMyStrategyClick }) =>
               <Avatar sx={{ height: "30px", width: "30px", marginRight: "4px", backgroundColor: "transparent" }}>
                 <img src={socialAvatar} />
               </Avatar>
-              <Box className="absolute" sx={{ top: '20px', right: '3px' }}>
-                <CupIcon size={15} />
+              <Box className="absolute" sx={{ top: '20px', right: index <= 2 ? '3px' : '4px' }}>
+                <div className="relative">
+                  {index <= 2 ? (
+                    <>
+                      <CupIcon
+                          size={15}
+                          color={
+                            index === 0 ? TROPHY_COLORS.GOLD : 
+                            index === 1 ? TROPHY_COLORS.SILVER : 
+                            TROPHY_COLORS.BRONZE
+                          }  
+                      />
+                      <div className="absolute top-[42%] left-[42%] -translate-x-1/2 -translate-y-1/2 text-[6px] font-medium text-[#1B223A] -rotate-[18deg]">
+                        {index + 1}
+                      </div>
+                    </>
+                  ) : (
+                    <div className="h-[10px] min-w-[10px] rounded-[5px] bg-transparent border border-white flex items-center justify-center">
+                      <span className="text-[6px] font-medium text-[#FFD235] px-[2px]">
+                        {index + 1}
+                      </span>
+                    </div>
+                  )}
+                </div>
               </Box>
             </Box>
             
