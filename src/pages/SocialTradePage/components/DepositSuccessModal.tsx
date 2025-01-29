@@ -10,7 +10,6 @@ export const DepositSuccessModal: FC = () => {
     const [isOpen, setIsOpen] = useState(false);
     const paymentId = useLocalStorageSubscription('paymentCreated');
 
-    console.log('paymentId', paymentId);
     const { data: paymentStatus } = useQuery({
         queryKey: ['paymentStatus', paymentId],
         // queryFn: () => TRUST_API.getPaymentStatus('8' || ''),

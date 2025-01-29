@@ -213,144 +213,153 @@ export const SwapPage = () => {
 
 
   return (
-      <Box className="flex flex-col items-center bg-gray-100 h-screen w-full">
-        {/* Header */}
-        <Box className="flex w-full items-center justify-between px-4 mt-10 mb-2">
-            <Typography sx={{fontSize: 24, color: "#1F2937"}} className="font-semibold">
-                Swap tokens
-            </Typography>
-            <IconButton onClick={handleSlippageDrawerOpen}>
-                <FilterIcon />
-            </IconButton>
-        </Box>
-
-
-        <Box className="flex flex-1 flex-col justify-between w-full max-w-md rounded-lg" sx={{height: "calc(100% - 200px)"}}>
-          {/* Send Section */}
-          <Box>
-            <Box sx={{
-              position: "relative"
-            }}>
-              {sendToken ? (
-                <Box className="flex justify-between items-center p-4">
-                  <Box onClick={handleDrawerOpen(true)} className="flex items-center">
-                    <Avatar sx={{ height: 32, width: 32, marginRight: "6px" }} src={sendToken?.imageUrl} alt={sendToken?.symbol} />
-                    <Typography variant="body1" sx={{fontSize: "1.875rem"}} className="font-semibold">{sendToken?.symbol}</Typography>
-                    <ThinArrowIcon className="ml-2"/>
-                  </Box>
-                  <Box className="text-right">
-                  <Box className="flex items-center justify-end">
-                    <WalletIcon/>
-                    <Typography onClick={() => setSendTokenAmount(String(sendToken?.amount ?? 0))} sx={{marginLeft: 0.625, color: Colors.blue, fontWeight: 100}}> {sendToken?.amount ?? 0}</Typography>
-                  </Box>
-                  <TextField
-                    value={sendTokenAmount}
-                    placeholder="0"
-                    onChange={(e) => setSendTokenAmount(e.target.value)}
-                    type="number"
-                    variant="outlined"
-                    size="small"
-                    sx={{
-                      '& .MuiInputBase-input': {
-                        fontSize: '2rem',
-                        textAlign: 'right',
-                        paddingRight: 0,
-                        marginLeft: 1.5,
-                        color: (canDoSwap || sendTokenAmount === "") ? "rgba(0, 0, 0, 0.87)" : "red",
-                      },
-                      '& .MuiOutlinedInput-notchedOutline': {
-                        border: 'none'
-                      }
-                    }}
-                  />
-                  {/* <Typography variant="body1" color="textSecondary">$5.16</Typography> */}
-                  </Box>
-              </Box>
-              ) : (
-                <Skeleton animation="wave" variant="rectangular" width="100%" height={119} />
-              )}
-              <Divider className="my-1 w-full" />
-              {/* Swap Icon */}
-              <IconButton sx={{
-                      position: "absolute",
-                      left: "50%",
-                      top: "50%",
-                      transform: "translate(-50%, -50%)",
-                      border: '1px solid',
-                      borderColor: 'gray.300',
-                      borderRadius: '50%', // Full circular shape
-                      backgroundColor: "#fff"
-                  }} 
-                  className="bg-gray-200 p-2 rounded-full h-[37px] w-[37px]"
-                  onClick={handleSwapQuoteTokens}
-              >
-                  <SwapArrows />
-              </IconButton>
-
-              {/* Receive Section */}
-              {receiveToken ? (
-                <Box className="flex justify-between items-center p-4 mb-3">
-                  <Box onClick={handleDrawerOpen(false)} className="flex items-center">
-                    <Avatar sx={{ height: 32, width: 32, marginRight: "6px" }} src={receiveToken?.imageUrl} alt={receiveToken?.symbol} />
-                    <Typography variant="body1" sx={{fontSize: "1.875rem"}} className="font-semibold">{receiveToken?.symbol}</Typography>
-                    <ThinArrowIcon className="ml-2"/>
-                  </Box>
-                  <Box className="text-right">
-                    <Box className="flex items-center justify-end">
-                      <WalletIcon color={Colors.textGray}/>
-                      <Typography sx={{marginLeft: 0.625, fontWeight: 100}}> {receiveToken?.amount ?? 0}</Typography>
-                    </Box>
-                    <Typography variant="body1" sx={{ padding: "7.5px 0px", fontSize: '2rem', color: sendTokenAmount && quote?.askUnits ? "rgba(0, 0, 0, 0.87)" : "rgba(0, 0, 0, 0.4)"}} className="font-semibold">{(sendTokenAmount && receiveToken?.decimals && quote?.askUnits) ? (quote.askUnits / Math.pow(10, receiveToken?.decimals)) : 0}</Typography>
-                    {/* <Typography variant="body1" color="textSecondary">$5.13 (-0.66%)</Typography> */}
-                  </Box>
-                </Box>
-              ) : (
-                <Skeleton animation="wave" variant="rectangular" width="100%" height={119} />
-              )}
+    <div 
+        className="h-full overflow-y-auto overscroll-none"
+        style={{ 
+            WebkitOverflowScrolling: 'touch',
+            touchAction: 'pan-y pinch-zoom',
+            height: '100dvh'
+        }}
+    >
+        <Box className="flex flex-col items-center bg-gray-100 min-h-screen w-full">
+            {/* Header */}
+            <Box className="flex w-full items-center justify-between px-4 mt-10 mb-2">
+                <Typography sx={{fontSize: 24, color: "#1F2937"}} className="font-semibold">
+                    Swap tokens
+                </Typography>
+                <IconButton onClick={handleSlippageDrawerOpen}>
+                    <FilterIcon />
+                </IconButton>
             </Box>
-            <Divider className="my-1 w-full" />
-            {/* Rate Information */}
-            {(!quote && !sendTokenAmount) ? <></>: (
-              <>
-                {quote && sendToken && receiveToken ? (
-                  <Paper className="p-3 m-4" sx={{backgroundColor: "#D9D9D9", borderRadius: 5}}>
-                    <Box className="flex justify-between mb-3">
-                      <Typography variant="body1" color="#0E0E0E">Rate</Typography>
-                      <Typography variant="body1" color="#0E0E0E">1 {quote?.offerSymbol} ≈ {formatNumber(quote.conversionRate)} {quote.askSymbol}</Typography>
-                    </Box>
-                    <Box className="flex justify-between mb-3">
-                      <Typography variant="body1" color="#0E0E0E">Slippage</Typography>
-                      <Typography variant="body1" color="#0E0E0E">{slippage}%</Typography>
-                    </Box>
-                    <Box className="flex justify-between">
-                      <Typography variant="body1" color="#0E0E0E">Network fee</Typography>
-                      <Typography variant="body1" color="#0E0E0E">≤ {quote.gasFee / Math.pow(10, TON_DECIMALS)} TON</Typography>
-                    </Box>
-                  </Paper>
-                ) : (
-                  <Skeleton animation="wave" variant="rectangular" width="100%" height={119} />
-                )}
-              </>
-            )}
-          </Box>
 
-          {/* Swap Button */}
-          {isAuthenticated ? <Box className="flex items-end mx-4 mb-30">
-            <Button
-              disabled={!sendTokenAmount || !quote || !userFriendlyAddress || !canDoSwap}
-              variant="contained"
-              color="primary"
-              className="w-full py-3 rounded-full text-white font-semibold normal-case"
-              sx={{height: "52px", backgroundColor: "#FFD235", color: "#1F2937", textTransform: "none", borderRadius: "12px", fontSize: 18}}
-              startIcon={(sendTokenAmount && !isLoadingTransaction) && <SwapToken />}
-              onClick={handleSwap}
-            >
-              {isLoadingTransaction ? <Spinner/> : (canDoSwap && sendTokenAmount ? "Swap token" : !sendTokenAmount ? "Enter an amount" :`Insufficient ${sendToken?.symbol ?? ""} balance`)}
-            </Button>
-          </Box> : null}
+
+            <Box className="flex flex-1 flex-col justify-between w-full max-w-md rounded-lg" sx={{height: "calc(100% - 200px)"}}>
+              {/* Send Section */}
+              <Box>
+                <Box sx={{
+                  position: "relative"
+                }}>
+                  {sendToken ? (
+                    <Box className="flex justify-between items-center p-4">
+                      <Box onClick={handleDrawerOpen(true)} className="flex items-center">
+                        <Avatar sx={{ height: 32, width: 32, marginRight: "6px" }} src={sendToken?.imageUrl} alt={sendToken?.symbol} />
+                        <Typography variant="body1" sx={{fontSize: "1.875rem"}} className="font-semibold">{sendToken?.symbol}</Typography>
+                        <ThinArrowIcon className="ml-2"/>
+                      </Box>
+                      <Box className="text-right">
+                      <Box className="flex items-center justify-end">
+                        <WalletIcon/>
+                        <Typography onClick={() => setSendTokenAmount(String(sendToken?.amount ?? 0))} sx={{marginLeft: 0.625, color: Colors.blue, fontWeight: 100}}> {sendToken?.amount ?? 0}</Typography>
+                      </Box>
+                      <TextField
+                        value={sendTokenAmount}
+                        placeholder="0"
+                        onChange={(e) => setSendTokenAmount(e.target.value)}
+                        type="number"
+                        variant="outlined"
+                        size="small"
+                        sx={{
+                          '& .MuiInputBase-input': {
+                            fontSize: '2rem',
+                            textAlign: 'right',
+                            paddingRight: 0,
+                            marginLeft: 1.5,
+                            color: (canDoSwap || sendTokenAmount === "") ? "rgba(0, 0, 0, 0.87)" : "red",
+                          },
+                          '& .MuiOutlinedInput-notchedOutline': {
+                            border: 'none'
+                          }
+                        }}
+                      />
+                      {/* <Typography variant="body1" color="textSecondary">$5.16</Typography> */}
+                      </Box>
+                  </Box>
+                  ) : (
+                    <Skeleton animation="wave" variant="rectangular" width="100%" height={119} />
+                  )}
+                  <Divider className="my-1 w-full" />
+                  {/* Swap Icon */}
+                  <IconButton sx={{
+                          position: "absolute",
+                          left: "50%",
+                          top: "50%",
+                          transform: "translate(-50%, -50%)",
+                          border: '1px solid',
+                          borderColor: 'gray.300',
+                          borderRadius: '50%', // Full circular shape
+                          backgroundColor: "#fff"
+                      }} 
+                      className="bg-gray-200 p-2 rounded-full h-[37px] w-[37px]"
+                      onClick={handleSwapQuoteTokens}
+                  >
+                      <SwapArrows />
+                  </IconButton>
+
+                  {/* Receive Section */}
+                  {receiveToken ? (
+                    <Box className="flex justify-between items-center p-4 mb-3">
+                      <Box onClick={handleDrawerOpen(false)} className="flex items-center">
+                        <Avatar sx={{ height: 32, width: 32, marginRight: "6px" }} src={receiveToken?.imageUrl} alt={receiveToken?.symbol} />
+                        <Typography variant="body1" sx={{fontSize: "1.875rem"}} className="font-semibold">{receiveToken?.symbol}</Typography>
+                        <ThinArrowIcon className="ml-2"/>
+                      </Box>
+                      <Box className="text-right">
+                        <Box className="flex items-center justify-end">
+                          <WalletIcon color={Colors.textGray}/>
+                          <Typography sx={{marginLeft: 0.625, fontWeight: 100}}> {receiveToken?.amount ?? 0}</Typography>
+                        </Box>
+                        <Typography variant="body1" sx={{ padding: "7.5px 0px", fontSize: '2rem', color: sendTokenAmount && quote?.askUnits ? "rgba(0, 0, 0, 0.87)" : "rgba(0, 0, 0, 0.4)"}} className="font-semibold">{(sendTokenAmount && receiveToken?.decimals && quote?.askUnits) ? (quote.askUnits / Math.pow(10, receiveToken?.decimals)) : 0}</Typography>
+                        {/* <Typography variant="body1" color="textSecondary">$5.13 (-0.66%)</Typography> */}
+                      </Box>
+                    </Box>
+                  ) : (
+                    <Skeleton animation="wave" variant="rectangular" width="100%" height={119} />
+                  )}
+                </Box>
+                <Divider className="my-1 w-full" />
+                {/* Rate Information */}
+                {(!quote && !sendTokenAmount) ? <></>: (
+                  <>
+                    {quote && sendToken && receiveToken ? (
+                      <Paper className="p-3 m-4" sx={{backgroundColor: "#D9D9D9", borderRadius: 5}}>
+                        <Box className="flex justify-between mb-3">
+                          <Typography variant="body1" color="#0E0E0E">Rate</Typography>
+                          <Typography variant="body1" color="#0E0E0E">1 {quote?.offerSymbol} ≈ {formatNumber(quote.conversionRate)} {quote.askSymbol}</Typography>
+                        </Box>
+                        <Box className="flex justify-between mb-3">
+                          <Typography variant="body1" color="#0E0E0E">Slippage</Typography>
+                          <Typography variant="body1" color="#0E0E0E">{slippage}%</Typography>
+                        </Box>
+                        <Box className="flex justify-between">
+                          <Typography variant="body1" color="#0E0E0E">Network fee</Typography>
+                          <Typography variant="body1" color="#0E0E0E">≤ {quote.gasFee / Math.pow(10, TON_DECIMALS)} TON</Typography>
+                        </Box>
+                      </Paper>
+                    ) : (
+                      <Skeleton animation="wave" variant="rectangular" width="100%" height={119} />
+                    )}
+                  </>
+                )}
+              </Box>
+
+              {/* Swap Button */}
+              {isAuthenticated ? <Box className="flex items-end mx-4 mb-30">
+                <Button
+                  disabled={!sendTokenAmount || !quote || !userFriendlyAddress || !canDoSwap}
+                  variant="contained"
+                  color="primary"
+                  className="w-full py-3 rounded-full text-white font-semibold normal-case"
+                  sx={{height: "52px", backgroundColor: "#FFD235", color: "#1F2937", textTransform: "none", borderRadius: "12px", fontSize: 18}}
+                  startIcon={(sendTokenAmount && !isLoadingTransaction) && <SwapToken />}
+                  onClick={handleSwap}
+                >
+                  {isLoadingTransaction ? <Spinner/> : (canDoSwap && sendTokenAmount ? "Swap token" : !sendTokenAmount ? "Enter an amount" :`Insufficient ${sendToken?.symbol ?? ""} balance`)}
+                </Button>
+              </Box> : null}
+            </Box>
+          <SelectTokenDrawer assets={swapData} open={drawerOpen} onClose={handleDrawerClose} filteredTokenAddress={isSendTokenMode ? receiveToken?.address : sendToken?.address} onSelect={isSendTokenMode ? onSelectSendToken : onSelectReceiveToken} />
+          <SlippageSettingsDrawer open={slippageDrawerOpen} onClose={handleSlippageDrawerClose} onSave={handleSlippage} />
         </Box>
-      <SelectTokenDrawer assets={swapData} open={drawerOpen} onClose={handleDrawerClose} filteredTokenAddress={isSendTokenMode ? receiveToken?.address : sendToken?.address} onSelect={isSendTokenMode ? onSelectSendToken : onSelectReceiveToken} />
-      <SlippageSettingsDrawer open={slippageDrawerOpen} onClose={handleSlippageDrawerClose} onSave={handleSlippage} />
-    </Box>
+    </div>
   );
 };

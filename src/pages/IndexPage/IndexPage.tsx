@@ -41,14 +41,14 @@ export const IndexPage: FC = () => {
 	const { isFromRefLink } = useAuthStore();
 
 	useEffect(() => {
-		const scrollContainer = document.querySelector(".max-h-screen");
-		if (scrollContainer) {
-			scrollContainer.scrollTo(0, 0);
-		}
+		document.body.style.overflow = 'hidden';
+		window.scrollTo(0, 0);
+		return () => {
+			document.body.style.overflow = 'auto';
+		};
 	}, []);
 
 	useEffect(() => {
-    console.log("isFromRefLink", isFromRefLink)
 		if (
 			initData?.startParam &&
 			initData?.startParam?.split("__wallet=").length > 1 && !isFromRefLink
@@ -95,53 +95,72 @@ export const IndexPage: FC = () => {
 		setSelectedTimeline(timeline);
 	};
 
-    const handleOpenProfile = () => {
-        GoogleAnalytics.openProfile();
-    }
+	const handleOpenProfile = () => {
+		GoogleAnalytics.openProfile();
+	}
 
-    return (
-        <div className="bg-gray-800 min-h-screen select-none overflow-hidden">
-            <div className="hero h-72 flex flex-col">
-                <div className="userdata px-4 flex justify-between items-center mt-1">
-                    <Link to={"/profiles"} onClick={handleOpenProfile}>
-                        <div className="flex items-center">
-                            <Logo className="h-11 w-11 py-3 px-2 bg-black rounded-full mr-3" />
-                            <div className="items-center">
-                                <p className="text-gray-400 font-light">{shortenWallet(walletAddress)}</p>
-                            </div>
-                            <MdOutlineKeyboardArrowRight color={Colors.zincLight} className="my-auto text-2xl" />
-                        </div>
-                    </Link>
+	return (
+		<div 
+			className="h-full overflow-y-auto overscroll-none"
+			style={{ 
+				WebkitOverflowScrolling: 'touch',
+				touchAction: 'pan-y pinch-zoom',
+				height: '100dvh',
+				padding: 0,
+				margin: 0
+			}}
+		>
+			<div className="bg-gray-800 min-h-screen m-0 p-0">
+				<div className="container m-0 p-0" >
+					<div className="hero h-72 flex flex-col">
+						<div className="userdata px-4 flex justify-between items-center mt-1">
+							<Link to={"/profiles"} onClick={handleOpenProfile}>
+								<div className="flex items-center">
+									<Logo className="h-11 w-11 py-3 px-2 bg-black rounded-full mr-3" />
+									<div className="items-center">
+										<p className="text-gray-400 font-light">{shortenWallet(walletAddress)}</p>
+									</div>
+									<MdOutlineKeyboardArrowRight color={Colors.zincLight} className="my-auto text-2xl" />
+								</div>
+							</Link>
 
-                    {userData?.referral_link && walletAddress && (
-                        <Button
-                            variant="outlined"
-                            sx={shareButtonStyles}
-                            onClick={() => {
-                                GoogleAnalytics.sharePortfolio();
-                                shareContent(
-                                    `https://t.me/TractionEyebot/app?startapp=${userData?.referral_link}__wallet=${walletAddress}`,
-                                    "Check out my investment profile and join my network of contacts. Find out your social score 🏆",
-                                );
-                            }}
-                        >
-                            <ShareIcon size={12} className="mr-1" />
-                            Share portfolio
-                        </Button>
-                    )}
-                </div>
-                <div style={{ touchAction: "none" }} className="mt-auto">
-                    <ChartHome timeline={selectedTimeline} />
-                    <TimelineToolbar friendWalletAddress={walletAddress} onTimelineSelect={handleTimelineSelect} />
-                </div>
-            </div>
-			<div
-				style={{ minHeight: "60vh", height: "100%" }}
-				className="p-5 rounded-t-3xl bg-gray-50 pb-32"
-			>
-				<AssetList />
-				<NFTList />
-				<ProtocolsList />
+							{userData?.referral_link && walletAddress && (
+								<Button
+									variant="outlined"
+									sx={shareButtonStyles}
+									onClick={() => {
+										GoogleAnalytics.sharePortfolio();
+										shareContent(
+											`https://t.me/TractionEyebot/app?startapp=${userData?.referral_link}__wallet=${walletAddress}`,
+											"Check out my investment profile and join my network of contacts. Find out your social score ��",
+										);
+									}}
+								>
+									<ShareIcon size={12} className="mr-1" />
+									Share portfolio
+								</Button>
+							)}
+						</div>
+						<div style={{ touchAction: "none" }} className="mt-auto">
+							<ChartHome timeline={selectedTimeline} />
+							<TimelineToolbar friendWalletAddress={walletAddress} onTimelineSelect={handleTimelineSelect} />
+						</div>
+					</div>
+					<div
+						style={{ 
+							minHeight: "60vh", 
+							height: "100%", 
+							width: "100%", 
+							margin: 0,
+							padding: '20px 20px 128px 20px'
+						}}
+						className="rounded-t-3xl bg-gray-50"
+					>
+						<AssetList />
+						<NFTList />
+						<ProtocolsList />
+					</div>
+				</div>
 			</div>
 		</div>
 	);

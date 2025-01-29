@@ -38,28 +38,28 @@ export const LeaderboardCard: FC<Props> = ({ trader, handleMyStrategyClick, inde
         <Box className="p-[12px_10px] h-[100px] flex items-center">
           <Box className="flex w-[130px]">
             <Box className="relative">
-              <Avatar sx={{ height: "30px", width: "30px", marginRight: "4px", backgroundColor: "transparent" }}>
+              <Avatar sx={{ height: "40px", width: "40px", marginRight: "4px", backgroundColor: "transparent" }}>
                 <img src={socialAvatar} />
               </Avatar>
-              <Box className="absolute" sx={{ top: '20px', right: index <= 2 ? '3px' : '4px' }}>
+              <Box className="absolute" sx={{ top: index <= 2 ? '27px' : '31px', right: index <= 2 ? '3px' : (index < 100 ? '4px' : '2px') }}>
                 <div className="relative">
                   {index <= 2 ? (
                     <>
                       <CupIcon
-                          size={15}
+                          size={20}
                           color={
                             index === 0 ? TROPHY_COLORS.GOLD : 
                             index === 1 ? TROPHY_COLORS.SILVER : 
                             TROPHY_COLORS.BRONZE
                           }  
                       />
-                      <div className="absolute top-[42%] left-[42%] -translate-x-1/2 -translate-y-1/2 text-[6px] font-medium text-[#1B223A] -rotate-[18deg]">
+                      <div className="absolute top-[42%] left-[42%] -translate-x-1/2 -translate-y-1/2 text-[11px] font-medium text-[#1B223A] -rotate-[18deg]">
                         {index + 1}
                       </div>
                     </>
                   ) : (
-                    <div className="h-[10px] min-w-[10px] rounded-[5px] bg-transparent border border-white flex items-center justify-center">
-                      <span className="text-[6px] font-medium text-[#FFD235] px-[2px]">
+                    <div className="h-[14px] min-w-[14px] rounded-[7px] bg-transparent border border-white flex items-center justify-center">
+                      <span className="text-[9px] font-medium text-[#FFD235] px-[2px]">
                         {index + 1}
                       </span>
                     </div>

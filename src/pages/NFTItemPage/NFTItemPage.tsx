@@ -43,44 +43,53 @@ const NFTItemPage: FC = () => {
 	// const assetMarketCap = API.getJettonCap(nft.nft_address);
 
 	return (
-		<div className="bg-gray-50 flex flex-col h-full p-5">
-			<img
-				className="rounded-3xl shadow-lg w-full"
-				src={nft_fromlist?.image_url}
-				alt={nft_fromlist?.name}
-			/>
-			<h1 className="text-3xl flex py-5 text-start font-bold">{nft?.name}</h1>
-			<span className="w-full border-b"></span>
-			<ul className="gap-3 mt-5 text-base">
-				<li className="flex justify-between mb-4">
-					<div className="text-gray-400 font-semibold">Floor Price</div>
-					<div className="font-semibold">${nft?.floor_price_usd}</div>
-				</li>
-				<li className="flex justify-between mb-4">
-					<div className="text-gray-400 font-semibold">Collection</div>
-					<div className="font-semibold justify-end flex text-end">
-						{nft?.collection_name}
-					</div>
-				</li>
-				<li className="flex justify-between mb-5">
-					<div className="text-gray-400 font-semibold">Purchase Date</div>
-					<div className="font-semibold">
-						{nft?.last_transaction_date || 'unknown'}
-					</div>
-				</li>
-				<li className="flex justify-between">
-					<div className="text-gray-400 font-semibold">TON Address</div>
-					<div
-						className="font-light font-mono cursor-pointer flex items-center"
-						onClick={() =>
-							copyToClipboard(nft?.nft_address ? nft?.nft_address : "")
-						}
-					>
-						<FaRegCopy size={16} color={Colors.gray} className="mr-2" />{" "}
-						{shortenAddress(nft?.nft_address ? nft.nft_address : "")}
-					</div>
-				</li>
-			</ul>
+		<div 
+			className="h-full overflow-y-auto overscroll-none"
+			style={{ 
+				WebkitOverflowScrolling: 'touch',
+				touchAction: 'pan-y pinch-zoom',
+				height: '100dvh'
+			}}
+		>
+			<div className="bg-gray-50 flex flex-col h-full p-5">
+				<img
+					className="rounded-3xl shadow-lg w-full"
+					src={nft_fromlist?.image_url}
+					alt={nft_fromlist?.name}
+				/>
+				<h1 className="text-3xl flex py-5 text-start font-bold">{nft?.name}</h1>
+				<span className="w-full border-b"></span>
+				<ul className="gap-3 mt-5 text-base">
+					<li className="flex justify-between mb-4">
+						<div className="text-gray-400 font-semibold">Floor Price</div>
+						<div className="font-semibold">${nft?.floor_price_usd}</div>
+					</li>
+					<li className="flex justify-between mb-4">
+						<div className="text-gray-400 font-semibold">Collection</div>
+						<div className="font-semibold justify-end flex text-end">
+							{nft?.collection_name}
+						</div>
+					</li>
+					<li className="flex justify-between mb-5">
+						<div className="text-gray-400 font-semibold">Purchase Date</div>
+						<div className="font-semibold">
+							{nft?.last_transaction_date || 'unknown'}
+						</div>
+					</li>
+					<li className="flex justify-between">
+						<div className="text-gray-400 font-semibold">TON Address</div>
+						<div
+							className="font-light font-mono cursor-pointer flex items-center"
+							onClick={() =>
+								copyToClipboard(nft?.nft_address ? nft?.nft_address : "")
+							}
+						>
+							<FaRegCopy size={16} color={Colors.gray} className="mr-2" />{" "}
+							{shortenAddress(nft?.nft_address ? nft.nft_address : "")}
+						</div>
+					</li>
+				</ul>
+			</div>
 		</div>
 	);
 };

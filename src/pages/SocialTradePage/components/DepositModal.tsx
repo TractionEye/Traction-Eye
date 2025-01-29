@@ -52,7 +52,6 @@ export const DepositModal: FC<DepositModalProps> = ({
     const createPaymentMutation = useMutation({
         mutationFn: TRUST_API.createPayment,
         onSuccess: (data) => {
-            console.log('Payment created successfully', data);
             setLocalStorageWithEvent('paymentCreated', data.id);
             onClose();
         },

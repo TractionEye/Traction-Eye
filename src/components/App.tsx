@@ -116,6 +116,11 @@ export const App: FC = () => {
                 miniApp.setHeaderColor("#000000");
                 miniApp.setBgColor("#000000");
                 break;
+            case location.pathname === "/social-trade":
+                postEvent("web_app_setup_back_button", { is_visible: false });
+                miniApp.setHeaderColor("#000000");
+                miniApp.setBgColor("#000000");
+                break;
         }
     }, [location, miniApp]);
 
@@ -162,7 +167,15 @@ export const App: FC = () => {
     }, [isAuthenticated]);
 
     return (
-        <div className="max-h-screen overflow-scroll">
+        <div 
+            className="fixed inset-0 overflow-hidden overscroll-none"
+            style={{
+                height: '100dvh', // dynamic viewport height
+                touchAction: 'none',
+                margin: 0,
+                padding: 0,
+            }}
+        >
             <TonConnectUIProvider>
                 <QueryClientProvider client={queryClient}>
                     <Toaster position="top-right" reverseOrder={false} />
@@ -178,7 +191,7 @@ export const App: FC = () => {
                                 <img 
                                     src={bottomImage} 
                                     alt="bottom" 
-                                    className="fixed bottom-[89px] left-1/2 -translate-x-1/2 w-[53px] h-auto z-40"
+                                    className="fixed bottom-[89px] left-1/2 -translate-x-1/2 w-[53px] h-auto z-40 touch-none"
                                     style={{ aspectRatio: 'auto' }}
                                 />
                                 <BottomNavigation
