@@ -48,7 +48,6 @@ const ProfilesListPage: FC = () => {
       setIsManaged(prevIsManaged => !prevIsManaged);
       postEvent('web_app_trigger_haptic_feedback', { type: 'impact', impact_style: 'soft' });
 
-      console.log('isManaged:', !isManaged);
     } else if (param === 'disconnect') {
       postEvent('web_app_trigger_haptic_feedback', { type: 'notification', notification_type: 'warning' });
       

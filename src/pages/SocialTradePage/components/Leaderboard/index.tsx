@@ -31,12 +31,44 @@ export const Leaderboard: FC<{ handleMyStrategyClick: () => void }> = ({ handleM
   };
 
   return (
-    <Box className="h-full w-full pt-[20px]">
-      <List
-        width="100%"
-        height={800}
-        itemCount={testData.length}
-        itemSize={120} // 100px высота + 20px отступ снизу
+    <Box 
+        className="h-full w-full touch-none"
+        sx={{
+            overflow: 'hidden',
+            WebkitOverflowScrolling: 'touch',
+            touchAction: 'pan-y pinch-zoom',
+            '&::-webkit-scrollbar-thumb': {
+              background: '#FFD235',
+              borderRadius: '4px'
+            },
+            '&::-webkit-scrollbar': {
+              width: '4px',
+            },
+        }}
+        onTouchStart={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+      }}
+      onTouchMove={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+      }}
+      onTouchEnd={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+      }}
+    >
+        <List
+          width="100%"
+          height={window.innerHeight - 140}
+          itemCount={testData.length}
+          itemSize={120}
+          style={{ 
+              marginBottom: '100px',
+              marginTop: '20px',
+              paddingBottom: '20px',
+              WebkitOverflowScrolling: 'touch'
+          }}
       >
         {rowRenderer}
       </List>
