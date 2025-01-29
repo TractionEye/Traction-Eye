@@ -203,18 +203,7 @@ export const SwapPage = () => {
 
 	useEffect(() => {
 		console.log("showConnectBtn", showConnectBtn);
-		console.log(
-			"LocalStorageKeys.firstLogin",
-			localStorage.getItem(LocalStorageKeys.firstLogin),
-			!localStorage.getItem(LocalStorageKeys.firstLogin)
-		);
-		console.log("userFriendlyAddress.length", userFriendlyAddress.length);
-		console.log("location?.pathname", location.pathname);
-		console.log(
-			"show on index",
-			(location?.pathname !== "/connect" && location?.pathname === "/friend") ||
-				showConnectBtn
-		);
+
 		if (!userFriendlyAddress.length) {
 			setShowConnectBtn(true);
 			return;

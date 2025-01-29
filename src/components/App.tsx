@@ -111,6 +111,11 @@ export const App: FC = () => {
                 miniApp.setHeaderColor("#000000");
                 miniApp.setBgColor("#000000");
                 break;
+            case location.pathname === "/social-trade/create-strategy":
+                postEvent("web_app_setup_back_button", { is_visible: true });
+                miniApp.setHeaderColor("#000000");
+                miniApp.setBgColor("#000000");
+                break;
         }
     }, [location, miniApp]);
 
