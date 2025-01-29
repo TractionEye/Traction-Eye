@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef } from 'react';
+import { FC, useEffect, useMemo, useRef } from 'react';
 import { Box, IconButton, Typography, Avatar, TextField, Divider } from '@mui/material';
 import { WalletIcon, CloseIcon } from '@/components/icons';
 import { Colors } from '@/constants';
@@ -16,6 +16,7 @@ interface DepositContentProps {
     description: string;
     collateral: string;
     protocol: string;
+    price: number;
 }
 
 const TOKEN_ICONS = {
@@ -33,7 +34,8 @@ export const DepositContent: FC<DepositContentProps> = ({
     canDoSwap,
     description,
     collateral,
-    protocol
+    protocol,
+    price
 }) => {
     const inputRef = useRef<HTMLInputElement>(null);
     console.log('description', description, collateral, protocol);
@@ -62,6 +64,8 @@ export const DepositContent: FC<DepositContentProps> = ({
             }, 50);
         }
     };
+
+    const usdAmount = useMemo(() => Number(sendTokenAmount) * price || 0, [sendTokenAmount, price]);
 
     return (
         <Box className="p-5">
@@ -146,11 +150,15 @@ export const DepositContent: FC<DepositContentProps> = ({
                         inputRef={inputRef}
                         value={sendTokenAmount}
                         placeholder="0.00"
-                        onChange={(e) => setSendTokenAmount(e.target.value)}
+                        onChange={(e) => {
+                            const value = e.target.value.replace(/^0+(?=\d)/, ''); // удаляем ведущие нули
+                            setSendTokenAmount(value);
+                        }}
                         onBlur={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                         type="number"
                         variant="outlined"
                         size="small"
+                        disabled={!amount}
                         sx={{
                             width: '160px',
                             '& .MuiInputBase-input': {
@@ -162,6 +170,13 @@ export const DepositContent: FC<DepositContentProps> = ({
                                 '&::placeholder': {
                                     color: '#fff',
                                     opacity: 1
+                                },
+                                '&.Mui-disabled': {
+                                    WebkitTextFillColor: '#fff',
+                                    '&::placeholder': {
+                                        opacity: 1,
+                                        color: '#fff'
+                                    }
                                 }
                             },
                             '& .MuiOutlinedInput-notchedOutline': {
@@ -177,7 +192,7 @@ export const DepositContent: FC<DepositContentProps> = ({
                         textAlign: 'right'
                     }}
                 >
-                    ${(Number(sendTokenAmount) * 1).toFixed(2)}
+                    ${usdAmount.toFixed(2)}
                 </Typography>
             </Box>
 
@@ -203,7 +218,7 @@ export const DepositContent: FC<DepositContentProps> = ({
             <button 
                 className="w-full h-[40px] bg-[#FFD235] text-black rounded-xl font-medium text-[17px] mb-[20px] disabled:opacity-50"
                 onClick={onInvest}
-                disabled={!canDoSwap || !sendTokenAmount || Number(sendTokenAmount) < 100}
+                disabled={!canDoSwap || !sendTokenAmount || usdAmount < 100}
             >
                 Invest
             </button>
