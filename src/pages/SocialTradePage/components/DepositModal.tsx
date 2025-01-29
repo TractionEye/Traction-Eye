@@ -39,14 +39,14 @@ export const DepositModal: FC<DepositModalProps> = ({
         ...CACHE_OPTIONS_FAST
     });
 
-    const { amount, canDoSwap } = useMemo(() => {
+    const { amount, canDoSwap, price } = useMemo(() => {
         const sendToken = externalData?.assets?.find(asset => 
             asset.address === TOKEN_ADDRESSES[collateral as keyof typeof TOKEN_ADDRESSES]
         );
         const amount = sendToken?.amount ? +sendToken.amount / Math.pow(10, +(sendToken?.decimals ?? 0)) : 0;
         const canDoSwap = amount ? amount >= Number(sendTokenAmount): false;
-        
-        return { amount, canDoSwap };
+        const price = sendToken?.price_usd;
+        return { amount, canDoSwap, price };
     }, [externalData?.assets, sendTokenAmount, collateral]);
 
     const createPaymentMutation = useMutation({
@@ -107,6 +107,7 @@ export const DepositModal: FC<DepositModalProps> = ({
                 description={description}
                 collateral={collateral}
                 protocol={protocol}
+                price={price ?? 0}
             />
         </Drawer>
     );
