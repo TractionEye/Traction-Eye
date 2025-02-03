@@ -24,7 +24,7 @@ export const Leaderboard: FC<{ handleMyStrategyClick: () => void }> = ({ handleM
     const item = testData[index];
     
     return (
-      <div style={{ ...style, padding: '0 20px 20px' }}>
+      <div style={{ ...style, padding: '0 20px 20px', marginTop: '20px' }}>
         <LeaderboardCard trader={item} handleMyStrategyClick={handleMyStrategyClick} index={index} />
       </div>
     );
@@ -65,7 +65,7 @@ export const Leaderboard: FC<{ handleMyStrategyClick: () => void }> = ({ handleM
           itemSize={120}
           style={{ 
               marginBottom: '100px',
-              marginTop: '20px',
+              paddingTop: '20px',
               paddingBottom: '20px',
               WebkitOverflowScrolling: 'touch'
           }}
