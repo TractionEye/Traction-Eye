@@ -140,7 +140,7 @@ export const DepositContent: FC<DepositContentProps> = ({
                         <Typography 
                             sx={{ 
                                 color: 'white',
-                                fontSize: '12px'
+                                fontSize: '15px'
                             }}
                         >
                             {collateral}
@@ -162,7 +162,7 @@ export const DepositContent: FC<DepositContentProps> = ({
                         sx={{
                             width: '160px',
                             '& .MuiInputBase-input': {
-                                fontSize: '12px',
+                                fontSize: '17px',
                                 fontWeight: 500,
                                 textAlign: 'right',
                                 p: 0,
